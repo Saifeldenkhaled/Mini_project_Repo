@@ -56,8 +56,43 @@ def plot_regional_performance(data):
     plt.show()
 
 
-# 4. Monthly Sales
-def plot_monthly_sales(data):
+# 4. City / State Performance
+def plot_city_performance(data):
+    plt.figure(figsize=(10, 8))
+
+    data.sort_values("Sales").plot(
+        kind="barh",
+        figsize=(10, 8)
+    )
+
+    plt.title("Sales and Profit by Top 10 Cities")
+    plt.xlabel("Amount")
+    plt.ylabel("City")
+
+    plt.tight_layout()
+    plt.show()
+
+
+# 5. Discount vs Profit Margin
+def plot_discount_vs_profit_margin(data):
+    plt.figure(figsize=(9, 6))
+
+    plt.scatter(
+        data["Discount"],
+        data["Profit Margin"],
+        alpha=0.5
+    )
+
+    plt.title("Discount vs Profit Margin")
+    plt.xlabel("Discount")
+    plt.ylabel("Profit Margin")
+
+    plt.tight_layout()
+    plt.show()
+
+
+# 6. Sales Seasonality
+def plot_sales_seasonality(data):
     plt.figure(figsize=(18, 6))
 
     plt.plot(
@@ -66,7 +101,7 @@ def plot_monthly_sales(data):
         marker="o"
     )
 
-    plt.title("Monthly Sales Trend")
+    plt.title("Sales Seasonality Over Time")
     plt.xlabel("Month")
     plt.ylabel("Total Sales")
 
@@ -76,49 +111,6 @@ def plot_monthly_sales(data):
         rotation=90,
         fontsize=8
     )
-
-    plt.tight_layout()
-    plt.show()
-
-
-# 5. Monthly Profit
-def plot_monthly_profit(data):
-    plt.figure(figsize=(18, 6))
-
-    plt.plot(
-        range(len(data)),
-        data.values,
-        marker="o"
-    )
-
-    plt.title("Monthly Profit Trend")
-    plt.xlabel("Month")
-    plt.ylabel("Total Profit")
-
-    plt.xticks(
-        range(len(data)),
-        data.index,
-        rotation=90,
-        fontsize=8
-    )
-
-    plt.tight_layout()
-    plt.show()
-
-
-# 6. Discount vs Profit
-def plot_discount_vs_profit(data):
-    plt.figure(figsize=(9, 6))
-
-    plt.scatter(
-        data["Discount"],
-        data["Profit"],
-        alpha=0.5
-    )
-
-    plt.title("Discount vs Profit")
-    plt.xlabel("Discount")
-    plt.ylabel("Profit")
 
     plt.tight_layout()
     plt.show()

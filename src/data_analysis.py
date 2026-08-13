@@ -28,8 +28,23 @@ def regional_performance(df):
     )
 
 
-# 4. Monthly Sales
-def monthly_sales(df):
+# 4. City Performance
+def city_performance(df):
+    return (
+        df.groupby("City")[["Sales", "Profit"]]
+        .sum()
+        .sort_values("Sales", ascending=False)
+        .head(10)
+    )
+
+
+# 5. Discount vs Profit Margin
+def discount_vs_profit_margin(df):
+    return df[["Discount", "Profit Margin"]]
+
+
+# 6. Sales Seasonality
+def sales_seasonality(df):
     monthly = (
         df.groupby(df["Order Date"].dt.to_period("M"))["Sales"]
         .sum()
@@ -38,23 +53,6 @@ def monthly_sales(df):
     monthly.index = monthly.index.strftime("%b %Y")
 
     return monthly
-
-
-# 5. Monthly Profit
-def monthly_profit(df):
-    monthly = (
-        df.groupby(df["Order Date"].dt.to_period("M"))["Profit"]
-        .sum()
-    )
-
-    monthly.index = monthly.index.strftime("%b %Y")
-
-    return monthly
-
-
-# 6. Discount vs Profit
-def discount_vs_profit(df):
-    return df[["Discount", "Profit"]]
 
 
 # 7. Profit Distribution by Category
@@ -75,13 +73,14 @@ def profit_by_region_category(df):
 
 # Complete Analysis
 def analyze_data(df):
+
     analysis = {
         "category_performance": category_performance(df),
         "profit_by_subcategory": profit_by_subcategory(df),
         "regional_performance": regional_performance(df),
-        "monthly_sales": monthly_sales(df),
-        "monthly_profit": monthly_profit(df),
-        "discount_vs_profit": discount_vs_profit(df),
+        "city_performance": city_performance(df),
+        "discount_vs_profit_margin": discount_vs_profit_margin(df),
+        "sales_seasonality": sales_seasonality(df),
         "profit_distribution_by_category": profit_distribution_by_category(df),
         "profit_by_region_category": profit_by_region_category(df)
     }
