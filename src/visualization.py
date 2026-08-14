@@ -1,5 +1,5 @@
 import matplotlib.pyplot as plt
-
+import numpy as np
 
 # 1. Category Performance
 def plot_category_performance(data):
@@ -56,31 +56,43 @@ def plot_regional_performance(data):
     plt.show()
 
 
-# 4. City / State Performance
 def plot_city_performance(data):
-    plt.figure(figsize=(10, 8))
+    plt.figure(figsize=(12, 7))
 
     data.sort_values("Sales").plot(
-        kind="barh",
-        figsize=(10, 8)
+        kind="line",
+        marker="o",
+        figsize=(12, 7)
     )
 
     plt.title("Sales and Profit by Top 10 Cities")
-    plt.xlabel("Amount")
-    plt.ylabel("City")
+    plt.xlabel("City")
+    plt.ylabel("Amount")
+    plt.xticks(rotation=45, ha="right")
 
     plt.tight_layout()
     plt.show()
-
 
 # 5. Discount vs Profit Margin
 def plot_discount_vs_profit_margin(data):
     plt.figure(figsize=(9, 6))
 
+    x = data["Discount"]
+    y = data["Profit Margin"]
+
     plt.scatter(
-        data["Discount"],
-        data["Profit Margin"],
+        x,
+        y,
         alpha=0.5
+    )
+
+    # Trend line
+    coefficients = np.polyfit(x, y, 1)
+    trend_line = np.poly1d(coefficients)
+
+    plt.plot(
+        x,
+        trend_line(x)
     )
 
     plt.title("Discount vs Profit Margin")

@@ -1,7 +1,6 @@
 import pandas as pd
 
 
-
 # 1. DATA LOADING
 
 def load_data(file_path):
@@ -26,8 +25,8 @@ def load_data(file_path):
         print(f"Error while loading the dataset: {e}")
         return None
 
-# 2. DATA INSPECTION
 
+# 2. DATA INSPECTION
 
 def inspect_structure(df):
 
@@ -41,6 +40,7 @@ def inspect_structure(df):
 
 
 def inspect_missing_values(df):
+
     missing_summary = (
         df.isnull()
         .sum()
@@ -53,14 +53,14 @@ def inspect_missing_values(df):
 
 
 def inspect_duplicates(df):
-    
+
     duplicate_count = df.duplicated().sum()
 
     return duplicate_count
 
 
 def inspect_memory_usage(df):
-   
+
     memory_usage = (
         df.memory_usage(deep=True)
         .sort_values(ascending=False)
@@ -71,7 +71,7 @@ def inspect_memory_usage(df):
 
 
 def inspect_unique_values(df):
-    
+
     unique_summary = (
         df.nunique()
         .sort_values()
@@ -82,18 +82,13 @@ def inspect_unique_values(df):
 
 
 def inspect_numerical_summary(df):
-   
+
     numerical_summary = df.describe().T
 
     return numerical_summary
 
 
-
-###############################
- # Data Cleaning
-###############################
-
-# 2. MISSING VALUES
+# 3. MISSING VALUES
 
 def handle_missing_values(df):
 
@@ -105,10 +100,38 @@ def handle_missing_values(df):
     return df
 
 
-# 3. DUPLICATES
+# 4. POSTAL CODE
+
+def check_missing_postal_codes(df):
+
+    postal_nulls = df[df["Postal Code"].isna()]
+
+    return {
+        "Missing Count": len(postal_nulls),
+        "Locations": postal_nulls[
+            ["Country/Region", "State", "City"]
+        ].drop_duplicates()
+    }
+
+
+def fill_missing_postal_codes(df, postal_code):
+
+    df = df.copy()
+
+    df.loc[
+        (df["City"] == "Burlington") &
+        (df["State"] == "Vermont") &
+        (df["Postal Code"].isna()),
+        "Postal Code"
+    ] = postal_code
+
+    return df
+
+
+# 5. DUPLICATES
 
 def remove_duplicates(df):
-  
+
     df = df.copy()
 
     duplicate_count = df.duplicated().sum()
@@ -122,7 +145,7 @@ def remove_duplicates(df):
     return df
 
 
-# 4. DATA TYPE OPTIMIZATION
+# 6. DATA TYPE OPTIMIZATION
 
 def optimize_data_types(df):
 
@@ -172,14 +195,15 @@ def optimize_data_types(df):
     return df
 
 
-# 5. INCONSISTENT VALUES
-
+# 7. INCONSISTENT VALUES
 
 def clean_inconsistent_values(df):
-   
+
     df = df.copy()
 
-    text_columns = df.select_dtypes(include=["object"]).columns
+    text_columns = df.select_dtypes(
+        include=["object"]
+    ).columns
 
     for column in text_columns:
         df[column] = df[column].str.strip()
@@ -187,8 +211,7 @@ def clean_inconsistent_values(df):
     return df
 
 
-
-# 6. OUTLIER DETECTION
+# 8. OUTLIER DETECTION
 
 def detect_outliers_iqr(df, columns=None):
 
@@ -227,12 +250,25 @@ def detect_outliers_iqr(df, columns=None):
     return pd.DataFrame(outlier_summary)
 
 
+# 8.1 OUTLIER ANALYSIS
 
-# 7. DATA VALIDATION
+def analyze_outliers(df):
 
+    return detect_outliers_iqr(
+        df,
+        columns=[
+            "Sales",
+            "Quantity",
+            "Discount",
+            "Profit"
+        ]
+    )
+
+
+# 9. DATA VALIDATION
 
 def validate_cleaned_data(df):
-   
+
     validation = {
         "Rows": df.shape[0],
         "Columns": df.shape[1],
@@ -249,24 +285,19 @@ def validate_cleaned_data(df):
     return pd.Series(validation)
 
 
-
-# 8. MEMORY OPTIMIZATION
-
+# 10. MEMORY OPTIMIZATION
 
 def get_memory_usage(df):
-   
 
     memory_usage = df.memory_usage(deep=True).sum()
 
     return memory_usage / (1024 ** 2)
 
 
-
-
-# 9. COMPLETE CLEANING PIPELINE
+# 11. COMPLETE CLEANING PIPELINE
 
 def clean_dataset(df):
-    
+
     df = df.copy()
 
     # Clean text formatting
