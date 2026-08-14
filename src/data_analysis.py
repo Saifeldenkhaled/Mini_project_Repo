@@ -46,11 +46,15 @@ def discount_vs_profit_margin(df):
 # 6. Sales Seasonality
 def sales_seasonality(df):
     monthly = (
-        df.groupby(df["Order Date"].dt.to_period("M"))["Sales"]
+        df.groupby(df["Order Date"].dt.month)["Sales"]
         .sum()
+        .sort_index()
     )
 
-    monthly.index = monthly.index.strftime("%b %Y")
+    monthly.index = pd.to_datetime(
+    monthly.index,
+    format="%m"
+).strftime("%B")
 
     return monthly
 

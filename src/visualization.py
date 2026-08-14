@@ -92,25 +92,16 @@ def plot_discount_vs_profit_margin(data):
 
 
 # 6. Sales Seasonality
+
 def plot_sales_seasonality(data):
-    plt.figure(figsize=(18, 6))
+    plt.figure(figsize=(12, 6))
 
-    plt.plot(
-        range(len(data)),
-        data.values,
-        marker="o"
-    )
+    data.plot(kind="bar")
 
-    plt.title("Sales Seasonality Over Time")
+    plt.title("Sales Seasonality by Month Across All Years")
     plt.xlabel("Month")
     plt.ylabel("Total Sales")
-
-    plt.xticks(
-        range(len(data)),
-        data.index,
-        rotation=90,
-        fontsize=8
-    )
+    plt.xticks(rotation=0)
 
     plt.tight_layout()
     plt.show()
